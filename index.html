@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Harliv Singh Chandhok — beginner developer learning Git & GitHub, HTML/CSS and C/C++. Certificates, GitHub and contact.">
+<title>Harliv Singh Chandhok — Developer in the Making</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23C63A17'/%3E%3Ctext x='32' y='43' font-family='Georgia' font-size='26' font-weight='bold' fill='%23FBF8F0' text-anchor='middle'%3EHC%3C/text%3E%3C/svg%3E">
+
+<!-- Fonts: Fraunces (display serif) · Space Grotesk (body) · JetBrains Mono (labels) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════
+   DESIGN TOKENS — the whole palette lives here
+   ══════════════════════════════════════════════ */
+:root{
+  --paper:        #F2EDE2;
+  --paper-bright: #FBF8F0;
+  --ink:          #1C1A16;
+  --ink-soft:     #6B665B;
+  --line:         rgba(28,26,22,.16);
+  --red:          #C63A17;
+  --red-bright:   #EF6A3C;
+  --green:        #2F7A46;
+  --serif: "Fraunces", Georgia, serif;
+  --sans:  "Space Grotesk", "Helvetica Neue", sans-serif;
+  --mono:  "JetBrains Mono", "Courier New", monospace;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{
+  background:var(--paper);color:var(--ink);
+  font:400 16px/1.6 var(--sans);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+body.locked{overflow:hidden}
+img{max-width:100%}
+button{font:inherit;background:none;border:0;cursor:pointer;color:inherit}
+
+/* paper grain over everything */
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:2000;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:260px;
+}
+::selection{background:var(--red);color:var(--paper-bright)}
+::-webkit-scrollbar{width:11px}
+::-webkit-scrollbar-track{background:var(--paper)}
+::-webkit-scrollbar-thumb{background:var(--ink);border:3px solid var(--paper);border-radius:8px}
+
+.container{width:min(1200px,100% - clamp(2rem,8vw,6rem));margin-inline:auto}
+.section{padding:clamp(4.5rem,10vw,8rem) 0}
+
+/* ── reveal on scroll ─────────────────────────── */
+.reveal{opacity:0;transform:translateY(26px);
+  transition:opacity .7s ease var(--d,0s),transform .7s cubic-bezier(.2,.7,.2,1) var(--d,0s)}
+.reveal.in{opacity:1;transform:none}
+
+/* ── scroll progress bar ──────────────────────── */
+#progress{position:fixed;top:0;left:0;height:3px;width:100%;background:var(--red);
+  transform:scaleX(0);transform-origin:0 50%;z-index:1500}
+
+/* ── header ───────────────────────────────────── */
+header{position:fixed;top:0;left:0;right:0;z-index:1000;height:66px;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0 clamp(1rem,4vw,3rem);border-bottom:1px solid transparent;
+  transition:background .35s,border-color .35s}
+header.scrolled{background:rgba(242,237,226,.92);backdrop-filter:blur(8px);border-bottom-color:var(--line)}
+.brand{display:flex;align-items:center;gap:.7rem;text-decoration:none;color:var(--ink)}
+.brand-seal{width:32px;height:32px;background:var(--red);color:var(--paper-bright);
+  display:grid;place-items:center;font:700 11px var(--mono);letter-spacing:.05em;
+  transform:rotate(-5deg)}
+.brand-text{font:600 12px var(--mono);letter-spacing:.14em;text-transform:uppercase}
+nav a{font:500 11px var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink);text-decoration:none;margin-left:clamp(1rem,2.6vw,2.1rem);
+  position:relative;padding:6px 0}
+nav a .idx{color:var(--red);margin-right:5px;font-weight:700}
+nav a::after{content:"";position:absolute;left:0;bottom:0;height:1.5px;width:0;background:var(--red);transition:width .3s}
+nav a:hover::after,nav a.active::after{width:100%}
+
+/* ── hero ─────────────────────────────────────── */
+.hero{min-height:100vh;min-height:100svh;display:flex}
+.hero-inner{display:flex;flex-direction:column;flex:1;padding-top:100px;padding-bottom:0;position:relative}
+.hero-top{display:flex;justify-content:space-between;gap:1rem;
+  border-bottom:1px solid var(--ink);padding-bottom:.9rem;
+  font:500 10.5px var(--mono);letter-spacing:.15em;text-transform:uppercase;color:var(--ink-soft)}
+.hero-main{margin-top:auto;padding-top:3rem;position:relative}
+.hero-title{font-family:var(--serif);font-weight:560;
+  font-variation-settings:"opsz" 144;
+  font-size:clamp(2.3rem,7.4vw,6.5rem);line-height:.98;letter-spacing:-.02em}
+.hero-title em{font-style:italic;font-weight:480}
+.hero-tag{max-width:560px;margin-top:1.7rem;color:var(--ink-soft);
+  font-size:clamp(1.02rem,1.5vw,1.2rem);line-height:1.55}
+.hero-tag strong{color:var(--ink);font-weight:600}
+.hero-meta{display:flex;flex-wrap:wrap;border-top:1px solid var(--ink);margin-top:2.6rem}
+.hero-meta>div{border-left:1px solid var(--line);padding:1rem 1.6rem 1.2rem}
+.hero-meta>div:first-child{border-left:0;padding-left:0}
+.meta-label{display:block;font:700 9.5px var(--mono);letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ink-soft);margin-bottom:.45rem}
+.meta-value{font:500 14px/1.4 var(--sans);display:inline-flex;align-items:center}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);
+  margin-right:7px;animation:pulse 2.2s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(47,122,70,.45)}70%{box-shadow:0 0 0 9px rgba(47,122,70,0)}100%{box-shadow:0 0 0 0 rgba(47,122,70,0)}}
+.meta-cue{margin-left:auto}
+.cue-arrow{width:13px;height:13px;margin-left:8px;animation:bob 2s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(4px)}}
+
+/* the rubber stamp */
+.stamp{position:absolute;top:-26px;right:1%;width:clamp(92px,14vw,168px);aspect-ratio:1;
+  color:var(--red);opacity:.9;mix-blend-mode:multiply;pointer-events:none;
+  animation:stamp-in .7s cubic-bezier(.2,1.4,.3,1) .55s both}
+.stamp svg{width:100%;height:100%;overflow:visible}
+.stamp-ring{font:600 12.5px var(--mono);letter-spacing:.17em;fill:currentColor}
+.stamp-core{font:italic 700 30px var(--serif);fill:currentColor}
+.ring-rotor{transform-box:view-box;transform-origin:50% 50%;animation:spin 26s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes stamp-in{0%{transform:rotate(-32deg) scale(1.9);opacity:0}
+  60%{opacity:.95}100%{transform:rotate(-12deg) scale(1);opacity:.9}}
+
+/* ── skills ticker ────────────────────────────── */
+.ticker{background:var(--red);color:var(--paper-bright);overflow:hidden;
+  padding:13px 0;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.ticker-track{display:flex;width:max-content;animation:ticker 26s linear infinite}
+.ticker:hover .ticker-track{animation-play-state:paused}
+.ticker-group{display:flex;align-items:center;gap:2.2rem;padding-right:2.2rem}
+.ticker-item{font:500 12.5px var(--mono);letter-spacing:.2em;text-transform:uppercase;white-space:nowrap}
+.tick{width:7px;height:7px;background:currentColor;transform:rotate(45deg);opacity:.7;flex:none}
+@keyframes ticker{to{transform:translateX(-50%)}}
+
+/* ── section headers ──────────────────────────── */
+.sec-head{display:flex;align-items:baseline;gap:1.25rem}
+.sec-no{font:700 13px var(--mono);color:var(--red);letter-spacing:.08em;white-space:nowrap}
+.sec-title{font:600 clamp(2.3rem,5vw,3.5rem)/1 var(--serif);font-variation-settings:"opsz" 100;letter-spacing:-.01em}
+.sec-rule{flex:1;height:1px;background:var(--ink);opacity:.22;align-self:center}
+.sec-note{font:500 10.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-soft);white-space:nowrap}
+
+/* ── tape (shared by photos & certificates) ───── */
+.tape{position:absolute;width:92px;height:26px;background:rgba(216,203,168,.62);
+  box-shadow:0 1px 3px rgba(28,26,22,.14);z-index:2}
+.tape.tl{top:-13px;left:-26px;transform:rotate(-38deg)}
+.tape.tr{top:-13px;right:-26px;transform:rotate(38deg)}
+
+/* ── about ────────────────────────────────────── */
+.about-grid{display:grid;grid-template-columns:5fr 7fr;gap:clamp(2.5rem,6vw,5rem);margin-top:3.2rem;align-items:start}
+.portrait{background:var(--paper-bright);border:1px solid var(--line);
+  padding:14px 14px 0;transform:rotate(-1.6deg);position:relative;
+  box-shadow:0 14px 30px -20px rgba(28,26,22,.4);
+  transition:outline-color .3s;outline:2px dashed transparent;outline-offset:5px}
+.portrait.dragging{outline-color:var(--red)}
+.portrait img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;filter:saturate(.88) contrast(1.02)}
+.portrait figcaption{font:500 10px var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-soft);padding:11px 2px}
+.about-text p{max-width:56ch;color:#3A372F;font-size:16.5px;line-height:1.7}
+.about-text p+p{margin-top:1.2rem}
+.drop::first-letter{font:600 3.3em/.82 var(--serif);float:left;color:var(--red);padding:.06em .12em 0 0}
+.records{margin-top:2.4rem;border-top:1px solid var(--ink)}
+.records>div{display:grid;grid-template-columns:140px 1fr;gap:1rem;padding:12px 0;border-bottom:1px solid var(--line)}
+.records dt{font:600 10px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);padding-top:3px}
+.records dd{font:500 15px var(--sans)}
+.records a{color:var(--red);text-decoration:none;border-bottom:1px solid rgba(198,58,23,.4)}
+.records a:hover{border-bottom-color:var(--red)}
+
+/* skills breakdown */
+.skills-block{display:grid;grid-template-columns:1fr 1fr;gap:2.2rem;
+  margin-top:2.4rem;border-top:1px solid var(--ink);padding-top:1.7rem}
+.skills-block h4{font:700 10px var(--mono);letter-spacing:.18em;text-transform:uppercase;
+  color:var(--red);margin-bottom:.9rem}
+.skills-block li{list-style:none;font:500 15px var(--sans);padding:7px 0 7px 20px;
+  border-bottom:1px solid var(--line);position:relative;color:#3A372F}
+.skills-block li::before{content:"";position:absolute;left:2px;top:14px;width:6px;height:6px;
+  background:var(--red);transform:rotate(45deg)}
+.skills-block li em{font-style:normal;color:var(--ink-soft);font-size:13px}
+
+/* ── certificates ─────────────────────────────── */
+#certificates{background:var(--paper-bright);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.gallery{display:flex;flex-wrap:wrap;gap:clamp(1.6rem,4vw,3rem);align-items:flex-start;margin-top:3.2rem}
+.cert{flex:1 1 300px;max-width:420px;cursor:pointer;outline-offset:4px}
+.cert-paper{background:var(--paper);border:1px solid var(--line);padding:12px 12px 0;position:relative;
+  transform:rotate(var(--tilt,0deg)) translateY(var(--lift,0rem));
+  box-shadow:0 1px 0 rgba(28,26,22,.06),0 14px 30px -20px rgba(28,26,22,.35);
+  transition:transform .45s cubic-bezier(.2,.9,.25,1),box-shadow .45s}
+.cert:hover .cert-paper,.cert:focus-visible .cert-paper{
+  transform:rotate(0deg) translateY(calc(var(--lift,0rem) - 8px));
+  box-shadow:0 26px 46px -22px rgba(28,26,22,.5),0 4px 0 rgba(28,26,22,.05)}
+.cert.dragging .cert-paper{transform:rotate(0deg) translateY(-8px);border-color:var(--red)}
+.cert-imgwrap{border:1px solid var(--line);overflow:hidden;background:#fff}
+.cert-imgwrap img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;
+  transform:scale(1.01);transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+.cert:hover .cert-imgwrap img{transform:scale(1.05)}
+.cert-meta{padding:12px 4px 15px}
+.cert-no{font:700 10px var(--mono);letter-spacing:.18em;color:var(--red)}
+.cert-name{font:600 20px/1.2 var(--serif);font-style:italic;margin:.4rem 0 .35rem}
+.cert-sub{font:500 10px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+
+/* drag-to-pin slot */
+.cert-slot{flex:1 1 300px;max-width:420px;min-height:300px;
+  border:1.5px dashed rgba(28,26,22,.35);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:.55rem;text-align:center;
+  padding:2rem 1.4rem;transition:border-color .3s,background .3s;transform:rotate(1.2deg)}
+.cert-slot:hover,.cert-slot.dragging{border-color:var(--red);background:rgba(198,58,23,.05)}
+.slot-plus{font:300 3rem/1 var(--serif);color:var(--red);transition:transform .4s cubic-bezier(.2,1.4,.3,1)}
+.cert-slot:hover .slot-plus{transform:rotate(90deg)}
+.slot-title{font:600 17px var(--serif);font-style:italic}
+.slot-sub{font:500 10px var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink-soft);max-width:26ch;line-height:1.7}
+
+/* "OPEN / PIN" cursor chip */
+#cursorChip{position:fixed;top:0;left:0;width:66px;height:66px;border-radius:50%;
+  background:var(--ink);color:var(--paper-bright);display:grid;place-items:center;
+  font:700 10px var(--mono);letter-spacing:.16em;pointer-events:none;z-index:1600;opacity:0}
+#cursorChip.on{opacity:1}
+@media (hover:hover) and (pointer:fine){[data-cursor]{cursor:none}}
+
+/* ── github ───────────────────────────────────── */
+.gh-grid{display:grid;grid-template-columns:5fr 7fr;gap:clamp(2.5rem,6vw,5rem);margin-top:3.2rem;align-items:start}
+.gh-avatar-wrap{width:min(210px,68%);margin-bottom:1.7rem;background:var(--paper-bright);
+  border:1px solid var(--line);padding:10px 10px 12px;transform:rotate(-1.6deg);
+  position:relative;box-shadow:0 14px 30px -20px rgba(28,26,22,.4)}
+.gh-avatar-wrap img{display:block;width:100%;aspect-ratio:1;object-fit:cover;
+  filter:saturate(.9);opacity:0;transition:opacity .5s}
+.gh-avatar-wrap img.loaded{opacity:1}
+.gh-name{font:600 1.9rem/1.1 var(--serif)}
+.gh-handle{font:600 12px var(--mono);letter-spacing:.05em;color:var(--red);text-decoration:none}
+.gh-handle:hover{text-decoration:underline}
+.gh-bio{color:var(--ink-soft);font-size:15px;margin:.7rem 0 1.5rem;max-width:44ch}
+.gh-stats{display:flex;border-top:1px solid var(--ink);border-bottom:1px solid var(--line);margin-bottom:1.7rem}
+.gh-stats>div{flex:1;padding:1rem .4rem 1.1rem;border-left:1px solid var(--line)}
+.gh-stats>div:first-child{border-left:0;padding-left:0}
+.gh-stats strong{display:block;font:600 2.1rem/1.05 var(--serif);font-variation-settings:"opsz" 80;font-variant-numeric:tabular-nums}
+.gh-stats span{font:600 9px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
+.btn-line{display:inline-flex;align-items:center;gap:.6rem;border:1.5px solid var(--ink);
+  padding:.85rem 1.5rem;font:600 11.5px var(--mono);letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink);text-decoration:none;transition:background .3s,border-color .3s,color .3s}
+.btn-line svg{width:14px;height:14px;transition:transform .3s}
+.btn-line:hover{background:var(--red);border-color:var(--red);color:var(--paper-bright)}
+.btn-line:hover svg{transform:translate(2px,-2px)}
+.repos-label{font:700 10px var(--mono);letter-spacing:.18em;text-transform:uppercase;
+  color:var(--ink-soft);margin-bottom:.4rem}
+.repo-row{display:grid;grid-template-columns:auto 1fr auto auto;gap:1.2rem;align-items:center;
+  padding:1.1rem .4rem;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);
+  transition:background .25s,color .25s,padding .25s;animation:rowIn .5s both;animation-delay:calc(var(--i)*80ms)}
+@keyframes rowIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.repo-row:hover{background:var(--ink);color:var(--paper);padding-left:1.1rem}
+.repo-no{font:700 10.5px var(--mono);color:var(--red)}
+.repo-name{font:600 19px var(--serif);font-style:italic}
+.repo-desc{display:block;font-size:13px;color:var(--ink-soft);margin-top:2px;transition:color .25s}
+.repo-row:hover .repo-desc{color:rgba(242,237,226,.65)}
+.repo-side{display:flex;flex-direction:column;align-items:flex-end;gap:5px;
+  font:500 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);transition:color .25s}
+.repo-row:hover .repo-side{color:rgba(242,237,226,.65)}
+.repo-stars{display:inline-flex;align-items:center;gap:4px}
+.repo-stars svg{width:11px;height:11px;fill:currentColor}
+.repo-arrow svg{width:16px;height:16px;transition:transform .25s}
+.repo-row:hover .repo-arrow svg{transform:translate(2px,-2px)}
+.repo-loading{padding:2rem 0;font:500 12px var(--mono);letter-spacing:.08em;color:var(--ink-soft)}
+.repo-loading a{color:var(--red)}
+
+/* ── contact / footer ─────────────────────────── */
+footer{background:var(--ink);color:var(--paper);padding:clamp(4.5rem,9vw,7rem) 0 2rem}
+footer .sec-no{color:var(--red-bright)}
+footer .sec-rule{background:var(--paper);opacity:.25}
+footer .sec-note{color:rgba(242,237,226,.5)}
+.contact-title{font:560 clamp(2.4rem,6vw,4.6rem)/1.05 var(--serif);
+  font-variation-settings:"opsz" 144;letter-spacing:-.015em;margin:2.8rem 0 1.6rem}
+.contact-title em{font-style:italic;color:var(--red-bright)}
+.contact-email{display:inline-flex;align-items:center;gap:.9rem;text-decoration:none;
+  color:var(--paper);font:500 clamp(1.1rem,3vw,1.8rem) var(--serif);font-style:italic;word-break:break-all}
+.contact-email svg{width:22px;height:22px;flex:none;transition:transform .3s}
+.contact-email:hover svg{transform:translate(3px,-3px);color:var(--red-bright)}
+.u{position:relative}
+.u::after{content:"";position:absolute;left:0;bottom:-5px;height:2px;width:100%;
+  background:var(--red-bright);transform:scaleX(.3);transform-origin:left;
+  transition:transform .45s cubic-bezier(.2,.8,.2,1)}
+.contact-email:hover .u::after{transform:scaleX(1)}
+.contact-links{margin-top:3.4rem;border-top:1px solid rgba(242,237,226,.18)}
+.contact-links a{display:flex;align-items:center;gap:1.1rem;padding:1.15rem .2rem;
+  border-bottom:1px solid rgba(242,237,226,.18);color:var(--paper);text-decoration:none;
+  transition:padding .3s,color .3s}
+.contact-links a:hover{padding-left:1.2rem;color:var(--red-bright)}
+.cl-no{font:700 10.5px var(--mono);color:rgba(242,237,226,.45)}
+.cl-icon svg{width:17px;height:17px;fill:currentColor;opacity:.8}
+.cl-name{font:500 clamp(1.1rem,2.4vw,1.45rem) var(--serif);font-style:italic}
+.cl-arrow{margin-left:auto}.cl-arrow svg{width:16px;height:16px;transition:transform .3s}
+.contact-links a:hover .cl-arrow svg{transform:translate(3px,-3px)}
+.foot-bar{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;
+  margin-top:4.2rem;padding-top:1.4rem;border-top:1px solid rgba(242,237,226,.18);
+  font:500 10px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:rgba(242,237,226,.45)}
+.foot-bar a{color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:.45rem}
+.foot-bar a:hover{color:var(--paper)}
+.foot-bar svg{width:12px;height:12px}
+
+/* ── lightbox ─────────────────────────────────── */
+.lightbox{position:fixed;inset:0;z-index:1800;background:rgba(24,22,18,.94);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s}
+.lightbox.open{opacity:1;visibility:visible}
+.lb-figure{width:100%;max-width:min(900px,84vw)}
+.lb-frame{background:var(--paper-bright);padding:clamp(10px,2vw,18px);
+  box-shadow:0 40px 80px -30px rgba(0,0,0,.7);
+  transform:scale(.93) translateY(14px);transition:transform .4s cubic-bezier(.2,1.2,.3,1)}
+.lightbox.open .lb-frame{transform:none}
+.lb-frame img{display:block;width:100%;max-height:66vh;object-fit:contain;background:#fff;
+  opacity:0;transition:opacity .4s}
+.lb-frame img.loaded{opacity:1}
+.lb-caption{display:flex;flex-wrap:wrap;align-items:baseline;gap:.6rem 1.5rem;
+  color:var(--paper);margin-top:1.1rem}
+.lb-count{font:700 11px var(--mono);letter-spacing:.14em;color:var(--red-bright)}
+.lb-title{font:600 1.4rem var(--serif);font-style:italic}
+.lb-sub{font:500 10px var(--mono);letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(242,237,226,.55);margin-left:auto}
+.lb-btn{position:absolute;width:52px;height:52px;border-radius:50%;
+  border:1px solid rgba(242,237,226,.4);color:var(--paper);display:grid;place-items:center;
+  transition:background .25s,color .25s,border-color .25s}
+.lb-btn:hover{background:var(--paper);color:var(--ink);border-color:var(--paper)}
+.lb-btn svg{width:20px;height:20px}
+.lb-close{top:26px;right:26px}
+.lb-prev{left:26px;top:50%;margin-top:-26px}
+.lb-next{right:26px;top:50%;margin-top:-26px}
+
+/* ── responsive ───────────────────────────────── */
+@media (max-width:860px){
+  .sec-note{display:none}
+  nav a .idx{display:none}
+  .hero-top span:last-child{display:none}
+  .about-grid,.gh-grid{grid-template-columns:1fr}
+  .portrait{max-width:420px}
+  .meta-cue{display:none}
+}
+@media (max-width:560px){
+  .brand-text{display:none}
+  .hero-meta{display:grid;grid-template-columns:1fr 1fr}
+  .hero-meta>div{border-left:0;border-top:1px solid var(--line);padding:.85rem .4rem}
+  .hero-meta>div:nth-child(-n+2){border-top:0}
+  .skills-block{grid-template-columns:1fr}
+  .lb-prev,.lb-next{top:auto;bottom:22px;margin-top:0;width:46px;height:46px}
+  .lb-prev{left:20px}.lb-next{right:20px}
+  .lb-sub{margin-left:0;width:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body id="top">
+
+<div id="progress" aria-hidden="true"></div>
+<div id="cursorChip" aria-hidden="true">OPEN</div>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header id="siteHeader">
+  <a class="brand" href="#top">
+    <span class="brand-seal">HC</span>
+    <span class="brand-text">Harliv Singh Chandhok — Archive</span>
+  </a>
+  <nav>
+    <a href="#about" data-nav="about"><span class="idx">01</span>About</a>
+    <a href="#certificates" data-nav="certificates"><span class="idx">02</span>Certificates</a>
+    <a href="#github" data-nav="github"><span class="idx">03</span>GitHub</a>
+    <a href="#contact" data-nav="contact"><span class="idx">04</span>Contact</a>
+  </nav>
+</header>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="hero">
+  <div class="container hero-inner">
+    <div class="hero-top reveal">
+      <span>Personal portfolio — Vol. 01</span>
+      <span>Learning · Building · Growing</span>
+    </div>
+
+    <div class="hero-main">
+      <div class="stamp" aria-hidden="true">
+        <svg viewBox="0 0 200 200">
+          <defs>
+            <path id="stampCircle" d="M100,100 m-72,0 a72,72 0 1,1 144,0 a72,72 0 1,1 -144,0"/>
+          </defs>
+          <circle cx="100" cy="100" r="95" fill="none" stroke="currentColor" stroke-width="3"/>
+          <circle cx="100" cy="100" r="89" fill="none" stroke="currentColor" stroke-width="1"/>
+          <circle cx="100" cy="100" r="50" fill="none" stroke="currentColor" stroke-width="1.5"/>
+          <g class="ring-rotor">
+            <text class="stamp-ring"><textPath href="#stampCircle">LEARNING • BUILDING • GROWING • EST. 2025 • </textPath></text>
+          </g>
+          <text x="100" y="112" text-anchor="middle" class="stamp-core">HC</text>
+        </svg>
+      </div>
+
+      <h1 class="hero-title">
+        <span class="ht-line reveal">Harliv Singh Chandhok —</span>
+        <span class="ht-line reveal" style="--d:.1s"><em>developer in the making</em></span>
+      </h1>
+      <p class="hero-tag reveal" style="--d:.18s">
+        I'm a beginner exploring technology through <strong>hands-on learning</strong> —
+        currently working through Git &amp; GitHub, HTML &amp; CSS, and the basics of C/C++.
+        This page is my public record: every certificate, repo and step of the climb, documented.
+      </p>
+    </div>
+
+    <div class="hero-meta reveal" style="--d:.26s">
+      <div><span class="meta-label">Currently</span><span class="meta-value">Learning C/C++ &amp; web fundamentals</span></div>
+      <div><span class="meta-label">Stage</span><span class="meta-value">Beginner — climbing fast</span></div>
+      <div><span class="meta-label">Status</span><span class="meta-value"><span class="dot"></span>Open to collaborations</span></div>
+      <div class="meta-cue"><span class="meta-label">Index</span>
+        <span class="meta-value">Scroll to explore
+          <svg class="cue-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v16m0 0l-6-6m6 6l6-6"/></svg>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ SKILLS TICKER ═══════════ -->
+<div class="ticker" aria-hidden="true"><div class="ticker-track" id="tickerTrack"></div></div>
+
+<!-- ═══════════ 01 · ABOUT ═══════════ -->
+<section id="about" class="section">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-no">( 01 )</span>
+      <h2 class="sec-title">About</h2>
+      <span class="sec-rule"></span>
+      <span class="sec-note">Who's behind this archive</span>
+    </div>
+
+    <div class="about-grid">
+      <figure class="portrait reveal" id="portrait">
+        <span class="tape tl"></span><span class="tape tr"></span>
+        <!-- EDIT: save your photo as photo.jpg next to this file — or just drag it onto this card -->
+        <img src="photo.jpg" alt="Portrait of Harliv Singh Chandhok">
+        <figcaption>FIG. 01 — The developer, early chapters.</figcaption>
+      </figure>
+
+      <div class="about-text">
+        <p class="drop reveal">I'm Harliv — a beginner developer at the start of my journey into
+          technology. I'm learning the fundamentals the practical way: Git &amp; GitHub for version
+          control, HTML &amp; CSS for the web, and C/C++ to understand how things work under the
+          hood. No shortcuts — just consistent, hands-on practice.</p>
+        <p class="reveal" style="--d:.08s">What excites me most is building real things and improving
+          along the way. I'm looking to meet people with similar interests, contribute to projects,
+          and turn what I learn into things people can actually use. This page is my open notebook —
+          a record of the climb, updated as I go.</p>
+
+        <dl class="records reveal" style="--d:.14s">
+          <div><dt>Learning now</dt><dd>C/C++ fundamentals</dd></div>
+          <div><dt>Tools</dt><dd>Git &amp; GitHub · HTML · CSS</dd></div>
+          <div><dt>Education</dt><dd>Self-directed — courses + practice</dd></div>
+          <div><dt>Status</dt><dd>Open to collaborations &amp; projects</dd></div>
+          <div><dt>Email</dt><dd><a href="mailto:harlivchandhok021@gmail.com">harlivchandhok021@gmail.com</a></dd></div>
+        </dl>
+
+        <div class="skills-block reveal" style="--d:.2s">
+          <div>
+            <h4>Technical</h4>
+            <ul>
+              <li>Git &amp; GitHub</li>
+              <li>HTML</li>
+              <li>CSS</li>
+              <li>C / C++ <em>— in progress</em></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Strengths</h4>
+            <ul>
+              <li>Problem-solving</li>
+              <li>Logical thinking</li>
+              <li>Teamwork &amp; collaboration</li>
+              <li>Communication</li>
+              <li>Quick learning &amp; adaptability</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 02 · CERTIFICATES ═══════════ -->
+<section id="certificates" class="section">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-no">( 02 )</span>
+      <h2 class="sec-title">Certificates</h2>
+      <span class="sec-rule"></span>
+      <span class="sec-note">Click to enlarge · drop an image to pin</span>
+    </div>
+
+    <div class="gallery" id="gallery">
+      <!-- Your Udemy certificate: save the image as cert-git-github.jpg next to this file,
+           or simply drag the image file onto this card. -->
+      <article class="cert reveal" tabindex="0" role="button" data-cursor="OPEN" style="--tilt:-1.4deg"
+        data-img="cert-git-github.jpg"
+        data-title="Git &amp; GitHub"
+        data-sub="Udemy · Certificate of Completion">
+        <div class="cert-paper">
+          <span class="tape tl"></span><span class="tape tr"></span>
+          <div class="cert-imgwrap"><img src="cert-git-github.jpg" alt="Git and GitHub — Udemy certificate" loading="lazy"></div>
+          <div class="cert-meta">
+            <span class="cert-no">CERT — 001</span>
+            <h3 class="cert-name">Git &amp; GitHub</h3>
+            <span class="cert-sub">Udemy · Certificate of Completion</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- drag & drop / browse to pin future certificates -->
+      <button class="cert-slot reveal" id="addCert" type="button" data-cursor="PIN" style="--d:.1s">
+        <span class="slot-plus">+</span>
+        <span class="slot-title">Pin another certificate</span>
+        <span class="slot-sub">Drag an image here or click to browse — more certs on the way</span>
+        <input type="file" accept="image/*" multiple hidden id="certFile">
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 03 · GITHUB ═══════════ -->
+<section id="github" class="section">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-no">( 03 )</span>
+      <h2 class="sec-title">GitHub</h2>
+      <span class="sec-rule"></span>
+      <span class="sec-note">Live from the GitHub API</span>
+    </div>
+
+    <div class="gh-grid">
+      <div class="gh-profile reveal">
+        <figure class="gh-avatar-wrap">
+          <span class="tape tl"></span><span class="tape tr"></span>
+          <img id="ghAvatar" alt="GitHub profile photo">
+        </figure>
+        <h3 class="gh-name" id="ghName">—</h3>
+        <a class="gh-handle" id="ghHandle" href="https://github.com/harliv25" target="_blank" rel="noopener">@harliv25</a>
+        <p class="gh-bio" id="ghBio">Fetching the record…</p>
+        <div class="gh-stats" id="ghStats">
+          <div><strong data-target="0" id="ghRepos">0</strong><span>Repositories</span></div>
+          <div><strong data-target="0" id="ghFollowers">0</strong><span>Followers</span></div>
+          <div><strong data-target="0" id="ghFollowing">0</strong><span>Following</span></div>
+        </div>
+        <a class="btn-line" id="ghLink" href="https://github.com/harliv25" target="_blank" rel="noopener">
+          Visit profile
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg>
+        </a>
+      </div>
+
+      <div class="gh-repos reveal" style="--d:.1s">
+        <p class="repos-label">Latest records — recently pushed repositories</p>
+        <div id="repoList">
+          <p class="repo-loading">Fetching records from GitHub</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 04 · CONTACT ═══════════ -->
+<footer id="contact">
+  <div class="container">
+    <div class="sec-head reveal">
+      <span class="sec-no">( 04 )</span>
+      <h2 class="sec-title">Contact</h2>
+      <span class="sec-rule"></span>
+      <span class="sec-note">The mailbox is open</span>
+    </div>
+
+    <h2 class="contact-title reveal">Early days, big plans —<br><em>let's build something.</em></h2>
+    <a class="contact-email reveal" href="mailto:harlivchandhok021@gmail.com">
+      <span class="u">harlivchandhok021@gmail.com</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg>
+    </a>
+
+    <div class="contact-links reveal" style="--d:.1s">
+      <a href="https://github.com/harliv25" target="_blank" rel="noopener">
+        <span class="cl-no">01</span>
+        <span class="cl-icon"><svg viewBox="0 0 24 24"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg></span>
+        <span class="cl-name">GitHub</span>
+        <span class="cl-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+      </a>
+      <a href="https://www.linkedin.com/in/harliv-singh-chandhok-90093a438" target="_blank" rel="noopener">
+        <span class="cl-no">02</span>
+        <span class="cl-icon"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z"/></svg></span>
+        <span class="cl-name">LinkedIn</span>
+        <span class="cl-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+      </a>
+      <a href="https://www.instagram.com/h._chd/" target="_blank" rel="noopener">
+        <span class="cl-no">03</span>
+        <span class="cl-icon"><svg viewBox="0 0 24 24"><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/></svg></span>
+        <span class="cl-name">Instagram</span>
+        <span class="cl-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+      </a>
+      <a href="mailto:harlivchandhok021@gmail.com">
+        <span class="cl-no">04</span>
+        <span class="cl-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 6 10-6"/></svg></span>
+        <span class="cl-name">Email</span>
+        <span class="cl-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
+      </a>
+    </div>
+
+    <div class="foot-bar">
+      <span>© <span id="year"></span> Harliv Singh Chandhok</span>
+      <span>Set in Fraunces &amp; Space Grotesk — learning in public</span>
+      <a href="#top">Back to top
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20V4m0 0l-6 6m6-6l6 6"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════ LIGHTBOX ═══════════ -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Certificate viewer">
+  <button class="lb-btn lb-close" id="lbClose" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <button class="lb-btn lb-prev" id="lbPrev" aria-label="Previous certificate">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>
+  </button>
+  <figure class="lb-figure">
+    <div class="lb-frame"><img id="lbImg" alt=""></div>
+    <figcaption class="lb-caption">
+      <span class="lb-count" id="lbCount">01 / 01</span>
+      <span class="lb-title" id="lbTitle"></span>
+      <span class="lb-sub" id="lbSub"></span>
+    </figcaption>
+  </figure>
+  <button class="lb-btn lb-next" id="lbNext" aria-label="Next certificate">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+  </button>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════
+   CONFIG — already set to Harliv's accounts
+   ══════════════════════════════════════════════ */
+const GITHUB_USERNAME = "harliv25";
+
+/* skills shown in the red ticker */
+const SKILLS = ["Git & GitHub","HTML","CSS","C/C++ — in progress",
+                "Problem-Solving","Logical Thinking","Teamwork","Communication","Quick Learning"];
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, m =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+const STAR = '<svg viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.402 8.168L12 19.331l-7.336 3.834 1.402-8.168L.132 9.21l8.2-1.192z"/></svg>';
+const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg>';
+
+/* ── ticker (content duplicated once for a seamless loop) ─────── */
+(() => {
+  const group = `<div class="ticker-group">${SKILLS.map(s =>
+    `<span class="ticker-item">${esc(s)}</span><span class="tick"></span>`).join("")}</div>`;
+  $("tickerTrack").innerHTML = group + group;
+})();
+
+/* ── scroll: progress bar + header state ──────────────────────── */
+const header = $("siteHeader"), progress = $("progress");
+const onScroll = () => {
+  header.classList.toggle("scrolled", scrollY > 24);
+  const max = document.documentElement.scrollHeight - innerHeight;
+  progress.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
+};
+addEventListener("scroll", onScroll, {passive:true}); onScroll();
+
+/* ── reveal on scroll ─────────────────────────────────────────── */
+const revealIO = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); revealIO.unobserve(e.target); } });
+}, {threshold:.12});
+document.querySelectorAll(".reveal").forEach(el => revealIO.observe(el));
+
+/* ── active nav link ──────────────────────────────────────────── */
+const navIO = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      document.querySelectorAll("nav a").forEach(a => a.classList.remove("active"));
+      document.querySelector(`nav a[data-nav="${e.target.id}"]`)?.classList.add("active");
+    }
+  });
+}, {rootMargin:"-40% 0px -55% 0px"});
+["about","certificates","github","contact"].forEach(id => {
+  const el = document.getElementById(id); if (el) navIO.observe(el);
+});
+
+/* ── friendly placeholder when an image file is missing ───────── */
+function placeholderSVG(w, h, line1, line2) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}">` +
+    `<rect width="${w}" height="${h}" fill="#EFE9DB"/>` +
+    `<rect x="26" y="26" width="${w-52}" height="${h-52}" fill="none" stroke="#C63A17" stroke-width="3" stroke-dasharray="14 10"/>` +
+    `<text x="${w/2}" y="${h/2 - 14}" text-anchor="middle" font-family="Georgia, serif" font-style="italic" font-size="${Math.round(w/26)}" fill="#1C1A16">${line1}</text>` +
+    `<text x="${w/2}" y="${h/2 + 44}" text-anchor="middle" font-family="monospace" font-size="${Math.round(w/54)}" letter-spacing="4" fill="#C63A17">${line2}</text>` +
+    `</svg>`;
+  return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+}
+
+/* make any figure accept a dropped image (and self-heal if file missing) */
+function makeDropTarget(zone, img, onNew) {
+  ["dragenter","dragover"].forEach(ev => zone.addEventListener(ev, e => { e.preventDefault(); zone.classList.add("dragging"); }));
+  ["dragleave","drop"].forEach(ev => zone.addEventListener(ev, () => zone.classList.remove("dragging")));
+  zone.addEventListener("drop", e => {
+    e.preventDefault();
+    const f = [...(e.dataTransfer?.files || [])].find(f => f.type.startsWith("image/"));
+    if (!f) return;
+    const r = new FileReader();
+    r.onload = () => {
+      img.dataset.fbk = "";           // re-arm the error guard
+      img.src = r.result;
+      if (zone.dataset.img !== undefined) zone.dataset.img = r.result;
+      onNew && onNew(f);
+    };
+    r.readAsDataURL(f);
+  });
+}
+
+function wireImageFallback(img, phSVG, zone) {
+  const fail = () => {
+    if (img.dataset.fbk) return;
+    img.dataset.fbk = "1";
+    img.src = phSVG;
+    if (zone && zone.dataset.img !== undefined) zone.dataset.img = phSVG;
+  };
+  if (img.complete && img.naturalWidth === 0) fail();
+  else img.addEventListener("error", fail);
+}
+
+/* ── portrait: shows placeholder until you add photo.jpg ──────── */
+(() => {
+  const fig = $("portrait"), img = fig.querySelector("img");
+  wireImageFallback(img,
+    placeholderSVG(640, 800, "Your photo goes here", "SAVE AS photo.jpg — OR DROP IT HERE"), null);
+  makeDropTarget(fig, img, () => {
+    fig.querySelector("figcaption").textContent = "FIG. 01 — That's me.";
+  });
+})();
+
+/* ── certificate lightbox ─────────────────────────────────────── */
+const lb = $("lightbox"), lbImg = $("lbImg");
+let lbIndex = 0;
+const certs = () => [...document.querySelectorAll(".cert")];
+const pad = n => String(n).padStart(2,"0");
+
+function renderLb() {
+  const list = certs(), c = list[lbIndex];
+  if (!c) return;
+  lbImg.classList.remove("loaded");
+  lbImg.src = c.dataset.img;
+  lbImg.alt = c.dataset.title;
+  $("lbTitle").textContent = c.dataset.title;
+  $("lbSub").textContent = c.dataset.sub;
+  $("lbCount").textContent = `${pad(lbIndex+1)} / ${pad(list.length)}`;
+}
+lbImg.onload = () => lbImg.classList.add("loaded");
+
+function openLb(i) {
+  lbIndex = i; renderLb();
+  lb.classList.add("open"); document.body.classList.add("locked");
+  $("lbClose").focus();
+}
+function closeLb() {
+  lb.classList.remove("open"); document.body.classList.remove("locked");
+}
+const step = d => { const n = certs().length; lbIndex = (lbIndex + d + n) % n; renderLb(); };
+
+ $("lbClose").addEventListener("click", closeLb);
+ $("lbPrev").addEventListener("click", () => step(-1));
+ $("lbNext").addEventListener("click", () => step(1));
+lb.addEventListener("click", e => { if (e.target === lb) closeLb(); });
+addEventListener("keydown", e => {
+  if (!lb.classList.contains("open")) return;
+  if (e.key === "Escape") closeLb();
+  if (e.key === "ArrowRight") step(1);
+  if (e.key === "ArrowLeft") step(-1);
+});
+
+/* wire click + keyboard + drop-replace on every certificate card */
+function bindCard(card) {
+  const open = () => openLb(certs().indexOf(card));
+  card.addEventListener("click", open);
+  card.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); }
+  });
+  const img = card.querySelector("img");
+  wireImageFallback(img,
+    placeholderSVG(1200, 800, "Certificate arriving soon", "DROP THE IMAGE HERE — OR SAVE AS cert-git-github.jpg"), card);
+  makeDropTarget(card, img);   // dropping an image on the card replaces it
+}
+document.querySelectorAll(".cert").forEach(bindCard);
+
+/* ── drag & drop / browse to pin a new certificate ────────────── */
+const slot = $("addCert"), fileInput = $("certFile");
+let certCounter = certs().length;
+
+slot.addEventListener("click", () => fileInput.click());
+fileInput.addEventListener("change", () => { handleFiles(fileInput.files); fileInput.value = ""; });
+["dragenter","dragover"].forEach(ev => slot.addEventListener(ev, e => { e.preventDefault(); slot.classList.add("dragging"); }));
+["dragleave","drop"].forEach(ev => slot.addEventListener(ev, () => slot.classList.remove("dragging")));
+slot.addEventListener("drop", e => { e.preventDefault(); handleFiles(e.dataTransfer.files); });
+
+function handleFiles(files) {
+  [...files].filter(f => f.type.startsWith("image/")).slice(0, 4).forEach(f => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const name = f.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ").trim();
+      const card = buildCard(reader.result, name);
+      $("gallery").insertBefore(card, slot);
+      requestAnimationFrame(() => requestAnimationFrame(() => card.classList.add("in")));
+    };
+    reader.readAsDataURL(f);
+  });
+}
+function buildCard(src, name) {
+  certCounter++;
+  const el = document.createElement("article");
+  el.className = "cert reveal";
+  el.tabIndex = 0;
+  el.setAttribute("role","button");
+  el.dataset.cursor = "OPEN";
+  el.dataset.img = src;
+  el.dataset.title = name || "Untitled certificate";
+  el.dataset.sub = "Added by you · this session";
+  el.style.setProperty("--tilt", (Math.random()*3 - 1.5).toFixed(2) + "deg");
+  el.style.setProperty("--lift", (Math.random()*1.4).toFixed(2) + "rem");
+  el.innerHTML = `
+    <div class="cert-paper">
+      <span class="tape tl"></span><span class="tape tr"></span>
+      <div class="cert-imgwrap"><img src="${src}" alt="${esc(name)} certificate"></div>
+      <div class="cert-meta">
+        <span class="cert-no">CERT — ${String(certCounter).padStart(3,"0")}</span>
+        <h3 class="cert-name">${esc(name)}</h3>
+        <span class="cert-sub">Added by you · stored in this session</span>
+      </div>
+    </div>`;
+  bindCard(el);
+  return el;
+}
+
+/* ── "OPEN / PIN" cursor chip (pointer devices only) ──────────── */
+if (matchMedia("(hover:hover) and (pointer:fine)").matches) {
+  const chip = $("cursorChip");
+  let cx = 0, cy = 0, tx = 0, ty = 0, on = false;
+  document.addEventListener("mousemove", e => { tx = e.clientX; ty = e.clientY; });
+  (function loop() {
+    cx += (tx - cx) * .18; cy += (ty - cy) * .18;
+    chip.style.transform = `translate(${cx}px,${cy}px) translate(-50%,-50%) scale(${on ? 1 : .4})`;
+    requestAnimationFrame(loop);
+  })();
+  document.addEventListener("mouseover", e => {
+    const t = e.target.closest("[data-cursor]");
+    if (t) { chip.textContent = t.dataset.cursor; on = true; chip.classList.add("on"); }
+  });
+  document.addEventListener("mouseout", e => {
+    const t = e.target.closest("[data-cursor]");
+    if (t && !t.contains(e.relatedTarget)) { on = false; chip.classList.remove("on"); }
+  });
+}
+
+/* ── GitHub: live profile + latest repos (public API, no key) ─── */
+let statsData = false, statsInView = false;
+function maybeCount() {
+  if (!statsData || !statsInView) return;
+  document.querySelectorAll("#ghStats strong").forEach(el => {
+    const target = +el.dataset.target, start = performance.now();
+    (function tick(t) {
+      const p = Math.min(1, (t - start) / 1000), e = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * e);
+      if (p < 1) requestAnimationFrame(tick);
+    })(start);
+  });
+}
+new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { statsInView = true; maybeCount(); }
+}), {threshold:.4}).observe($("ghStats"));
+
+(async function loadGitHub() {
+  const base = `https://api.github.com/users/${GITHUB_USERNAME}`;
+  try {
+    const [u, repos] = await Promise.all([
+      fetch(base).then(r => { if (!r.ok) throw new Error(); return r.json(); }),
+      fetch(`${base}/repos?sort=updated&per_page=8`).then(r => r.ok ? r.json() : [])
+    ]);
+    const avatar = $("ghAvatar");
+    avatar.src = u.avatar_url;
+    avatar.onload = () => avatar.classList.add("loaded");
+    $("ghName").textContent = u.name || u.login;
+    $("ghHandle").textContent = "@" + u.login;
+    $("ghBio").textContent = u.bio || "No bio on file — the code speaks for itself.";
+    $("ghLink").href = u.html_url;
+    statsData = true;
+    $("ghRepos").dataset.target = u.public_repos;
+    $("ghFollowers").dataset.target = u.followers;
+    $("ghFollowing").dataset.target = u.following;
+    maybeCount();
+
+    const list = repos.filter(r => !r.fork).slice(0, 4);
+    $("repoList").innerHTML = list.length ? list.map((r, i) => `
+      <a class="repo-row" style="--i:${i}" data-cursor="VISIT" href="${esc(r.html_url)}" target="_blank" rel="noopener">
+        <span class="repo-no">${pad(i+1)}</span>
+        <span class="repo-main">
+          <span class="repo-name">${esc(r.name)}</span>
+          <span class="repo-desc">${esc(r.description || "No description — dive in and see for yourself.")}</span>
+        </span>
+        <span class="repo-side">
+          <span>${esc(r.language || "Code")}</span>
+          <span class="repo-stars">${STAR} ${r.stargazers_count >= 1000 ? (r.stargazers_count/1000).toFixed(1)+"k" : r.stargazers_count}</span>
+        </span>
+        <span class="repo-arrow">${ARROW}</span>
+      </a>`).join("")
+      : `<p class="repo-loading">No public repositories yet — the archive awaits its first entry.</p>`;
+  } catch {
+    $("repoList").innerHTML = `<p class="repo-loading">Couldn't reach the GitHub archive (offline or rate-limited).
+      <a href="https://github.com/${GITHUB_USERNAME}" target="_blank" rel="noopener">Visit the profile directly →</a></p>`;
+  }
+})();
+
+ $("year").textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
